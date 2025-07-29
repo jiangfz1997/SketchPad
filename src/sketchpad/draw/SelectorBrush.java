@@ -20,10 +20,10 @@ public class SelectorBrush implements DrawStrategy {
         Point p = e.getPoint();
         dragStart = dragEnd = p;
 
-        // Case 1: 点在选中图形内 → 拖动所有已选中图形
         for (int i = shapeList.size() - 1; i >= 0; i--) {
             Shape s = shapeList.get(i);
-            if (s.isSelected() && s.contains(p)) {
+            Rectangle sRectangle = s.getBounds();
+            if (s.isSelected() && sRectangle.contains(p)) {
                 lastX = p.x;
                 lastY = p.y;
                 recordOriginalPositions();
