@@ -36,7 +36,8 @@ public class SelectorBrush implements DrawStrategy {
         selectedShapes.clear();
         for (int i = shapeList.size() - 1; i >= 0; i--) {
             Shape s = shapeList.get(i);
-            if (s.contains(p)) {
+            Rectangle sRectangle = s.getBounds();
+            if (sRectangle.contains(p)) {
                 s.setSelected(true);
                 selectedShapes.add(s);
                 lastX = p.x;
