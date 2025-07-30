@@ -17,14 +17,12 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // 🖼️ 中央画布
         canvas = new DrawingCanvas();
         add(canvas, BorderLayout.CENTER);
         setJMenuBar(createMenuBar());
 
-        // 🔧 左侧工具栏
         JToolBar toolBar = new JToolBar(JToolBar.VERTICAL);
-        toolBar.setFloatable(false); // 禁止拖动
+        toolBar.setFloatable(false);
         add(toolBar, BorderLayout.WEST);
         addColorPicker(toolBar);
         // add tool buttons
@@ -53,16 +51,11 @@ public class MainFrame extends JFrame {
                 canvas.setCurrentBrush(new SelectorBrush())
         );
 
-
-
-
-
         setVisible(true);
     }
     private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
-        // 📁 File 菜单
         JMenu fileMenu = new JMenu("File");
 
         JMenuItem saveItem = new JMenuItem("Save");
@@ -75,12 +68,11 @@ public class MainFrame extends JFrame {
             if (result == JFileChooser.APPROVE_OPTION) {
                 File file = chooser.getSelectedFile();
 
-                // 自动加扩展名（如果用户没写）
                 if (!file.getName().toLowerCase().endsWith(".sketchpad")) {
                     file = new File(file.getAbsolutePath() + ".sketchpad");
                 }
 
-                canvas.saveToFile(file);  // 你的保存逻辑
+                canvas.saveToFile(file);
             }
         });
 
@@ -93,7 +85,7 @@ public class MainFrame extends JFrame {
             int result = chooser.showOpenDialog(this);
             if (result == JFileChooser.APPROVE_OPTION) {
                 File file = chooser.getSelectedFile();
-                canvas.loadFromFile(file);  // 你的加载逻辑
+                canvas.loadFromFile(file);
             }
         });
 

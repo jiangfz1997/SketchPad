@@ -21,7 +21,6 @@ public class LineShape extends Shape {
 
     @Override
     public boolean contains(Point p) {
-        // 允许点在直线附近一定范围内
         double distance = Line2D.ptSegDist(x1, y1, x2, y2, p.x, p.y);
         return distance < 5.0; // 像素容差
     }

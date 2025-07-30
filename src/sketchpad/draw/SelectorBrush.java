@@ -1,7 +1,6 @@
 package sketchpad.draw;
 
 import sketchpad.shape.Shape;
-import sketchpad.util.ShapeClipboard;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -20,7 +19,7 @@ public class SelectorBrush implements DrawStrategy {
     public void onMousePressed(MouseEvent e, List<Shape> shapeList) {
         Point p = e.getPoint();
         dragStart = dragEnd = p;
-
+        updateSelectedList(shapeList);
         for (int i = shapeList.size() - 1; i >= 0; i--) {
             Shape s = shapeList.get(i);
             Rectangle sRectangle = s.getBounds();
@@ -31,8 +30,6 @@ public class SelectorBrush implements DrawStrategy {
                 return;
             }
         }
-
-        // Case 2: 点在未选中的图形上 → 清除所有选中，只选它
         for (Shape s : shapeList) s.setSelected(false);
         selectedShapes.clear();
         for (int i = shapeList.size() - 1; i >= 0; i--) {
@@ -47,8 +44,6 @@ public class SelectorBrush implements DrawStrategy {
                 return;
             }
         }
-
-        // Case 3: 点在空白 → 开始框选，selectedShapes 清空，等 onMouseReleased 处理
     }
 
     @Override
@@ -121,5 +116,14 @@ public class SelectorBrush implements DrawStrategy {
             s.setSelected(false);
         }
         selectedShapes.clear();
+    }
+
+    private void updateSelectedList(List<Shape> shapeList) {
+        selectedShapes.clear();
+        for (Shape s : shapeList) {
+            if (s.isSelected()) {
+                selectedShapes.add(s);
+            }
+        }
     }
 }

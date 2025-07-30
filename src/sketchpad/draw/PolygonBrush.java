@@ -24,7 +24,6 @@ public class PolygonBrush implements DrawStrategy {
         Point p = e.getPoint();
 
         if (currentPolygon == null) {
-            // 第一次按下，准备拖出第一条线段（必须拖动）
             List<Point> init = new ArrayList<>();
             init.add(p);
             currentPolygon = new PolygonShape(init, color, false);
@@ -33,7 +32,6 @@ public class PolygonBrush implements DrawStrategy {
             isFirstDragCompleted = false;
             shapeList.add(currentPolygon);
         } else if (!isDraggingFirst && isFirstDragCompleted) {
-            // 后续点击，添加点（必须先完成第一条拖动线段）
             currentPolygon.addPoint(p);
         }
     }
@@ -64,7 +62,6 @@ public class PolygonBrush implements DrawStrategy {
 
             List<Point> pts = currentPolygon.getPoints();
             if (pts.size() < 2 || pts.get(0).equals(pts.get(1))) {
-                // 拖动无效（点数不足或仅点击了一下），撤销该 polygon
                 shapeList.remove(currentPolygon);
                 currentPolygon = null;
                 isFirstDragCompleted = false;
@@ -74,7 +71,6 @@ public class PolygonBrush implements DrawStrategy {
                 currentPolygon.setPreviewPoint(null);
             }
         } else {
-            // 将 previewPoint 作为正式点加入
             Point preview = currentPolygon.getPreviewPoint();
             if (preview != null) {
                 currentPolygon.addPoint(preview);
@@ -85,9 +81,14 @@ public class PolygonBrush implements DrawStrategy {
 
     @Override
     public void drawPreview(Graphics g) {
-        // 实际预览已经内置在 PolygonShape.draw 中
     }
 
+    /**
+     * onMouseDoubleClick
+     * close the current polygon if it has enough points
+     * @param e
+     * @param shapeList
+     */
     public void onMouseDoubleClick(MouseEvent e, List<Shape> shapeList) {
         if (currentPolygon != null && currentPolygon.getPoints().size() >= 3) {
             currentPolygon.closePolygon();
@@ -97,6 +98,11 @@ public class PolygonBrush implements DrawStrategy {
         }
     }
 
+    /**
+     * finishPolygonOnToolSwitch
+     * close the current polygon if it has enough points (discard for implementing open polygons)
+     * @param shapeList
+     */
     public void finishPolygonOnToolSwitch(List<Shape> shapeList) {
         if (currentPolygon != null) {
             Point preview = currentPolygon.getPreviewPoint();

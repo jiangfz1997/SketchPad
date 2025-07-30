@@ -23,7 +23,6 @@ public class DrawingCanvas extends JPanel {
         setupKeyBindings();
 
 
-        // 鼠标事件统一转发给当前笔刷
         addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 if (currentBrush != null)
@@ -96,7 +95,7 @@ public class DrawingCanvas extends JPanel {
                 }
                 // 偏移一下，防止覆盖
                 for (Shape s : pasted) {
-                    s.moveBy(10, 10); // 你需要在 Shape 或其子类里实现 offset(dx, dy)
+                    s.moveBy(10, 10);
                     shapes.add(s);
                 }
 
@@ -140,7 +139,7 @@ public class DrawingCanvas extends JPanel {
 
         for (Shape s : shapes) {
             s.draw(g);
-            s.drawSelection(g);     // 如果被选中，就额外绘制“选框”
+            s.drawSelection(g);
         }
 
         if (currentBrush != null)
@@ -161,8 +160,6 @@ public class DrawingCanvas extends JPanel {
             Object obj = in.readObject();
             if (obj instanceof List<?>) {
                 List<?> loadedList = (List<?>) obj;
-
-                // 检查是否为 Shape 类型的列表
                 boolean valid = loadedList.stream().allMatch(o -> o instanceof Shape);
                 if (valid) {
                     shapes = (List<Shape>) loadedList;
