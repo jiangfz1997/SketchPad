@@ -1,0 +1,38 @@
+name: Build and Release SketchPad
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 24
+        uses: actions/setup-java@v4
+        with:
+          java-version: '24'
+          distribution: 'temurin'
+
+      - name: Compile Java Project
+        run: |
+          mkdir -p out
+          javac -d out $(find src -name "*.java")
+
+      - name: Package JAR
+        run: |
+          mkdir -p dist
+          echo "Main-Class: sketchpad.SketchPad.main" > manifest.txt
+          jar cfm dist/SketchPad.jar manifest.txt -C out .
+
+      - name: Upload JAR to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/SketchPad.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
