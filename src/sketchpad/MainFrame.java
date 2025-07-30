@@ -3,8 +3,10 @@ package sketchpad;
 import sketchpad.draw.*;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class MainFrame extends JFrame {
     private final DrawingCanvas canvas;
@@ -65,17 +67,33 @@ public class MainFrame extends JFrame {
 
         JMenuItem saveItem = new JMenuItem("Save");
         saveItem.addActionListener(e -> {
-            JFileChooser fileChooser = new JFileChooser();
-            if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-                canvas.saveToFile(fileChooser.getSelectedFile());
+            JFileChooser chooser = new JFileChooser();
+            chooser.setDialogTitle("Save As");
+            chooser.setFileFilter(new FileNameExtensionFilter("SketchPad files (*.sketchpad)", "sketchpad"));
+
+            int result = chooser.showSaveDialog(this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File file = chooser.getSelectedFile();
+
+                // 自动加扩展名（如果用户没写）
+                if (!file.getName().toLowerCase().endsWith(".sketchpad")) {
+                    file = new File(file.getAbsolutePath() + ".sketchpad");
+                }
+
+                canvas.saveToFile(file);  // 你的保存逻辑
             }
         });
 
         JMenuItem loadItem = new JMenuItem("Load");
         loadItem.addActionListener(e -> {
-            JFileChooser fileChooser = new JFileChooser();
-            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                canvas.loadFromFile(fileChooser.getSelectedFile());
+            JFileChooser chooser = new JFileChooser();
+            chooser.setDialogTitle("Open File");
+            chooser.setFileFilter(new FileNameExtensionFilter("SketchPad files (*.sketchpad)", "sketchpad"));
+
+            int result = chooser.showOpenDialog(this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File file = chooser.getSelectedFile();
+                canvas.loadFromFile(file);  // 你的加载逻辑
             }
         });
 

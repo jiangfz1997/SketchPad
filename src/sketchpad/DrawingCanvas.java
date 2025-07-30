@@ -158,11 +158,29 @@ public class DrawingCanvas extends JPanel {
 
     public void loadFromFile(File file) {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
-            shapes = (List<Shape>) in.readObject();
-            repaint();
-            System.out.println("✔ Loaded from " + file.getAbsolutePath());
+            Object obj = in.readObject();
+            if (obj instanceof List<?>) {
+                List<?> loadedList = (List<?>) obj;
+
+                // 检查是否为 Shape 类型的列表
+                boolean valid = loadedList.stream().allMatch(o -> o instanceof Shape);
+                if (valid) {
+                    shapes = (List<Shape>) loadedList;
+                    repaint();
+                    System.out.println("✔ Loaded from " + file.getAbsolutePath());
+                } else {
+                    showError("Invalid file format: not a list of shapes.");
+                }
+            } else {
+                showError("Invalid file: expected a list of shapes.");
+            }
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            showError("Failed to load file:\n" + e.getMessage());
         }
+    }
+
+
+    private void showError(String message) {
+        JOptionPane.showMessageDialog(this, message, "Load Error", JOptionPane.ERROR_MESSAGE);
     }
 }
