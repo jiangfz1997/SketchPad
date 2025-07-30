@@ -9,11 +9,12 @@ import sketchpad.util.ShapeClipboard;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DrawingCanvas extends JPanel {
-    private final List<Shape> shapes = new ArrayList<>();
+    private List<Shape> shapes = new ArrayList<>();
     private DrawStrategy currentBrush;
     private Color currentColor = Color.BLACK;
 
@@ -144,5 +145,24 @@ public class DrawingCanvas extends JPanel {
 
         if (currentBrush != null)
             currentBrush.drawPreview(g);
+    }
+
+    public void saveToFile(File file) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))) {
+            out.writeObject(shapes);
+            System.out.println("✔ Saved to " + file.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadFromFile(File file) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
+            shapes = (List<Shape>) in.readObject();
+            repaint();
+            System.out.println("✔ Loaded from " + file.getAbsolutePath());
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

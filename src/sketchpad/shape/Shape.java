@@ -1,6 +1,7 @@
 package sketchpad.shape;
 
 import java.awt.*;
+import java.io.Serial;
 import java.io.Serializable;
 
 import static java.awt.BasicStroke.CAP_BUTT;
@@ -9,6 +10,8 @@ import org.apache.commons.lang3.SerializationUtils;
 
 
 public abstract class Shape implements Cloneable, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     protected Color color;
     protected boolean selected = false;
     public Shape(Color color) {

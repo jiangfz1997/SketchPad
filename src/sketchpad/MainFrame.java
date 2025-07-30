@@ -18,6 +18,7 @@ public class MainFrame extends JFrame {
         // 🖼️ 中央画布
         canvas = new DrawingCanvas();
         add(canvas, BorderLayout.CENTER);
+        setJMenuBar(createMenuBar());
 
         // 🔧 左侧工具栏
         JToolBar toolBar = new JToolBar(JToolBar.VERTICAL);
@@ -55,6 +56,34 @@ public class MainFrame extends JFrame {
 
 
         setVisible(true);
+    }
+    private JMenuBar createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+
+        // 📁 File 菜单
+        JMenu fileMenu = new JMenu("File");
+
+        JMenuItem saveItem = new JMenuItem("Save");
+        saveItem.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                canvas.saveToFile(fileChooser.getSelectedFile());
+            }
+        });
+
+        JMenuItem loadItem = new JMenuItem("Load");
+        loadItem.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                canvas.loadFromFile(fileChooser.getSelectedFile());
+            }
+        });
+
+        fileMenu.add(saveItem);
+        fileMenu.add(loadItem);
+        menuBar.add(fileMenu);
+
+        return menuBar;
     }
 
     private void addToolButton(JToolBar bar, String name, Runnable action) {
