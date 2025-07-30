@@ -10,7 +10,8 @@ import java.util.List;
 
 
 public class SelectorBrush implements DrawStrategy {
-    private final List<Shape> selectedShapes = new ArrayList<>();    private int lastX, lastY;
+    private final List<Shape> selectedShapes = new ArrayList<>();
+    private int lastX, lastY;
     private Point dragStart = null;
     private Point dragEnd = null;
     private Map<Shape, Point> originalPositions = new HashMap<>();

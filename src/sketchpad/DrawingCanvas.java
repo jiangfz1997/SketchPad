@@ -66,7 +66,7 @@ public class DrawingCanvas extends JPanel {
         inputMap.put(KeyStroke.getKeyStroke("control C"), "copy");
         inputMap.put(KeyStroke.getKeyStroke("control X"), "cut");
         inputMap.put(KeyStroke.getKeyStroke("control V"), "paste");
-
+        inputMap.put(KeyStroke.getKeyStroke("DELETE"), "deleteSelected");
         actionMap.put("copy", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -88,10 +88,26 @@ public class DrawingCanvas extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 List<Shape> pasted = ShapeClipboard.paste();
+                for (Shape s : shapes) {
+                    if (s.isSelected()){
+                        s.setSelected(false);
+                    }
+                }
                 // 偏移一下，防止覆盖
                 for (Shape s : pasted) {
                     s.moveBy(10, 10); // 你需要在 Shape 或其子类里实现 offset(dx, dy)
                     shapes.add(s);
+                }
+
+                repaint();
+            }
+        });
+        actionMap.put("deleteSelected", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                shapes.removeIf(Shape::isSelected);
+                for (Shape s : shapes) {
+                    s.setSelected(false);
                 }
                 repaint();
             }

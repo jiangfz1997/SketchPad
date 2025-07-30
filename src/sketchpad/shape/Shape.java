@@ -1,11 +1,14 @@
 package sketchpad.shape;
 
 import java.awt.*;
+import java.io.Serializable;
 
 import static java.awt.BasicStroke.CAP_BUTT;
 import static java.awt.BasicStroke.JOIN_MITER;
+import org.apache.commons.lang3.SerializationUtils;
 
-public abstract class Shape implements Cloneable {
+
+public abstract class Shape implements Cloneable, Serializable {
     protected Color color;
     protected boolean selected = false;
     public Shape(Color color) {
@@ -71,11 +74,8 @@ public abstract class Shape implements Cloneable {
 
     @Override
     public Shape clone() {
-        try {
-            return (Shape) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError("Clone failed", e);
-        }
+        return SerializationUtils.clone(this);
+
     }
 
 
