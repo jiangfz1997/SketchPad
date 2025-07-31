@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -30,7 +31,7 @@ jobs:
       - name: Package JAR
         run: |
           mkdir -p dist
-          echo "Main-Class: sketchpad.SketchPad.main" > manifest.txt
+          echo "Main-Class: sketchpad.SketchPad" > manifest.txt
           jar cfm dist/SketchPad.jar manifest.txt -C out .
 
       - name: Upload JAR to GitHub Release
